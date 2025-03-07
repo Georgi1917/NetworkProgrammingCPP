@@ -5,8 +5,14 @@
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT "27015"
+#define DEFAULT_BUFLEN 512
 
-int main(int argc, char **argv) {
+int __cdecl main(int argc, char **argv) {
+
+	int recvbuflen = DEFAULT_BUFLEN;
+
+	const char* sendBuf = "this is a test";
+	char recvbuf[DEFAULT_BUFLEN];
 
 	SOCKET ConnectSocket = INVALID_SOCKET;
 
@@ -62,5 +68,44 @@ int main(int argc, char **argv) {
 		WSACleanup();
 		return 1;
 	}
+
+	iResult = send(ConnectSocket, sendBuf, (int)strlen(sendBuf), 0);
+
+	if (iResult == SOCKET_ERROR) {
+		std::cout << "Send failed. " << WSAGetLastError() << std::endl;
+		closesocket(ConnectSocket);
+		WSACleanup();
+		return 1;
+	}
+
+	iResult = shutdown(ConnectSocket, SD_SEND);
+
+	if (iResult == SOCKET_ERROR) {
+		std::cout << "Shutdown Failed. " << WSAGetLastError() << std::endl;
+		closesocket(ConnectSocket);
+		WSACleanup();
+		return 1;
+	}
+
+	do {
+
+		iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+
+		if (iResult > 0) {
+			std::cout << "Bytes Received: " << iResult << std::endl;
+		}
+		else if (iResult == 0) {
+			std::cout << "Connection Closed" << std::endl;
+		}
+		else {
+			std::cout << "Recv Failed. " << WSAGetLastError() << std::endl;
+		}
+
+	} while (iResult > 0);
+
+	closesocket(ConnectSocket);
+	WSACleanup();
+
+	return 0;
 
 }

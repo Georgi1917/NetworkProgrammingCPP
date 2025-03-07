@@ -1,2 +1,5 @@
-﻿  main.cpp
-  NetworkProgramming.vcxproj -> E:\CPP_Projects\NetworkProgrammingCPP\NetworkProgramming\x64\Debug\NetworkProgramming.exe
+﻿  client.cpp
+  server.cpp
+  Generating Code...
+server.obj : error LNK2005: main already defined in client.obj
+D:\CPPProjects\NetworkProjectCPP\NetworkProgrammingCPP\x64\Debug\NetworkProgramming.exe : fatal error LNK1169: one or more multiply defined symbols found
