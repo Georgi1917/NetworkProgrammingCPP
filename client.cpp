@@ -1,17 +1,52 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <iostream>
+#include <string>
+#include <thread>
 
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT "27015"
 #define DEFAULT_BUFLEN 512
 
+void receiveMessage(SOCKET ConnectSocket) {
+
+	char buffer[DEFAULT_BUFLEN];
+
+	while(1) {
+
+		int result = recv(ConnectSocket, buffer, (int)strlen(buffer), 0);
+
+		if (result > 0) {
+
+			buffer[result] = *"\0";
+			std::cout << buffer << std::endl;
+
+		}
+		else if (result == 0) {
+
+			std::cout << "Connection Closed\n";
+			break;
+
+		}
+		else {
+
+			std::cout << "Recv failed. " << WSAGetLastError() << std::endl;
+			closesocket(ConnectSocket);
+			WSACleanup();
+			break;
+
+		}
+
+	}
+
+}
+
 int __cdecl main(int argc, char **argv) {
 
 	int recvbuflen = DEFAULT_BUFLEN;
 
-	const char* sendBuf = "this is a test";
+	char input[100];
 	char recvbuf[DEFAULT_BUFLEN];
 
 	SOCKET ConnectSocket = INVALID_SOCKET;
@@ -22,7 +57,7 @@ int __cdecl main(int argc, char **argv) {
 					* ptr = NULL,
 					hints;
 
-	int iResult;
+	int iResult, sentResult;
 
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
@@ -69,17 +104,6 @@ int __cdecl main(int argc, char **argv) {
 		return 1;
 	}
 
-	iResult = send(ConnectSocket, sendBuf, (int)strlen(sendBuf), 0);
-
-	if (iResult == SOCKET_ERROR) {
-		std::cout << "Send failed. " << WSAGetLastError() << std::endl;
-		closesocket(ConnectSocket);
-		WSACleanup();
-		return 1;
-	}
-
-	iResult = shutdown(ConnectSocket, SD_SEND);
-
 	if (iResult == SOCKET_ERROR) {
 		std::cout << "Shutdown Failed. " << WSAGetLastError() << std::endl;
 		closesocket(ConnectSocket);
@@ -87,24 +111,33 @@ int __cdecl main(int argc, char **argv) {
 		return 1;
 	}
 
-	do {
+	std::thread recvThread(receiveMessage, ConnectSocket);
 
-		iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+	while(1) {
 
-		if (iResult > 0) {
-			std::cout << "Bytes Received: " << iResult << std::endl;
+		std::cin.getline(input, 100);
+		sentResult = send(ConnectSocket, input, (int)strlen(input), 0);
+
+		if (sentResult == 0) {
+
+			std::cout << "Connection closed. " << std::endl;
+			break;
+
 		}
-		else if (iResult == 0) {
-			std::cout << "Connection Closed" << std::endl;
-		}
-		else {
-			std::cout << "Recv Failed. " << WSAGetLastError() << std::endl;
+		else if (sentResult < 0) {
+
+			std::cout << "Send failed. " << WSAGetLastError() << std::endl;
+			closesocket(ConnectSocket);
+			WSACleanup();
+			break;
+
 		}
 
-	} while (iResult > 0);
+	}
 
 	closesocket(ConnectSocket);
 	WSACleanup();
+	recvThread.detach();
 
 	return 0;
 

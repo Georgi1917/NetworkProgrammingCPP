@@ -1,11 +1,45 @@
 #include <iostream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <thread>
 
 #pragma comment(lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT "27015"
 #define DEFAULT_BUFLEN 512
+
+void receiveMessage(SOCKET ClientSocket) {
+
+	char buffer[DEFAULT_BUFLEN];
+
+	while(1) {
+
+		int result = recv(ClientSocket, buffer, (int)strlen(buffer), 0);
+
+		if (result > 0) {
+
+			buffer[result] = *"\0";
+			std::cout << buffer << std::endl;
+
+		}
+		else if (result == 0) {
+
+			std::cout << "Connection closed\n" << std::endl;
+			break;
+
+		}
+		else {
+
+			std::cout << "Recv failed. " << WSAGetLastError() << std::endl;
+			closesocket(ClientSocket);
+			WSACleanup();
+			break;
+
+		}
+
+	}
+
+}
 
 int __cdecl main(void) {
 
@@ -15,6 +49,7 @@ int __cdecl main(void) {
 	WSADATA wsaData;
 
 	char recvbuf[DEFAULT_BUFLEN];
+	char input[100];
 	int iResult, iSendResult;
 	int recvbuflen = DEFAULT_BUFLEN;
 
@@ -82,44 +117,29 @@ int __cdecl main(void) {
 
 	closesocket(ListenSocket);
 
-	do {
+	std::thread recvThread(receiveMessage, ClientSocket);
 
-		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+	while(1) {
 
-		if (iResult > 0) {
+		std::cin.getline(input, 100);
+		iSendResult = send(ClientSocket, input, (int)strlen(input), 0);
 
-			std::cout << "Bytes Received: " << iResult << std::endl;
+		if (iSendResult == 0) {
 
-			iSendResult = send(ClientSocket, recvbuf, recvbuflen, 0);
-
-			if (iSendResult == SOCKET_ERROR) {
-
-				std::cout << "Send failed, error: " << WSAGetLastError() << std::endl;
-				closesocket(ClientSocket);
-				WSACleanup();
-				return 1;
-
-			}
-
-			std::cout << "Bytes send: " << iSendResult << std::endl;
+			std::cout << "Connection closed" << std::endl;
+			break;
 
 		}
-		else if (iResult == 0) {
+		else if (iSendResult < 0) {
 
-			std::cout << "Connection closed\n";
-
-		}
-		else {
-
-			std::cout << "Recv failed: " << WSAGetLastError() << std::endl;
+			std::cout << "Send failed. " << WSAGetLastError() << std::endl;
 			closesocket(ClientSocket);
 			WSACleanup();
-			return 1;
+			break;
 
 		}
 
-
-	} while (iResult > 0);
+	}
 
 	iResult = shutdown(ClientSocket, SD_SEND);
 
@@ -134,6 +154,7 @@ int __cdecl main(void) {
 
 	closesocket(ClientSocket);
 	WSACleanup();
+	recvThread.detach();
 
 	return 0;
 }

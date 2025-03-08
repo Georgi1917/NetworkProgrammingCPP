@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\CPPProjects\\NetworkProjectCPP\\NetworkProgrammingCPP\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2DE302D6-5F6F-4ED9-A4AD-599E1D65C07E}|NetworkProgramming.vcxproj|D:\\CPPProjects\\NetworkProjectCPP\\NetworkProgrammingCPP\\server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2DE302D6-5F6F-4ED9-A4AD-599E1D65C07E}|NetworkProgramming.vcxproj|solutionrelative:server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DE302D6-5F6F-4ED9-A4AD-599E1D65C07E}|NetworkProgramming.vcxproj|D:\\CPPProjects\\NetworkProjectCPP\\NetworkProgrammingCPP\\client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2DE302D6-5F6F-4ED9-A4AD-599E1D65C07E}|NetworkProgramming.vcxproj|solutionrelative:client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "server.cpp",
+              "DocumentMoniker": "D:\\CPPProjects\\NetworkProjectCPP\\NetworkProgrammingCPP\\server.cpp",
+              "RelativeDocumentMoniker": "server.cpp",
+              "ToolTip": "D:\\CPPProjects\\NetworkProjectCPP\\NetworkProgrammingCPP\\server.cpp",
+              "RelativeToolTip": "server.cpp",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAYwIoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-03-07T16:02:38.387Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "client.cpp",
+              "DocumentMoniker": "D:\\CPPProjects\\NetworkProjectCPP\\NetworkProgrammingCPP\\client.cpp",
+              "RelativeDocumentMoniker": "client.cpp",
+              "ToolTip": "D:\\CPPProjects\\NetworkProjectCPP\\NetworkProgrammingCPP\\client.cpp",
+              "RelativeToolTip": "client.cpp",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAYwFkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-03-07T15:40:13.525Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
