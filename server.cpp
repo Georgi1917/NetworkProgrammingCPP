@@ -14,11 +14,12 @@ void receiveMessage(SOCKET ClientSocket) {
 
 	while(1) {
 
-		int result = recv(ClientSocket, buffer, (int)strlen(buffer), 0);
+		int result = recv(ClientSocket, buffer, DEFAULT_BUFLEN, 0);
 
 		if (result > 0) {
 
 			buffer[result] = *"\0";
+
 			std::cout << buffer << std::endl;
 
 		}

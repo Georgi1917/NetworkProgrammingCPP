@@ -1,10 +1,9 @@
-#include <WinSock2.h>
-#include <WS2tcpip.h>
 #include <iostream>
-#include <string>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include <thread>
 
-#pragma comment (lib, "Ws2_32.lib")
+#pragma comment(lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT "27015"
 #define DEFAULT_BUFLEN 512
@@ -15,11 +14,12 @@ void receiveMessage(SOCKET ConnectSocket) {
 
 	while(1) {
 
-		int result = recv(ConnectSocket, buffer, (int)strlen(buffer), 0);
+		int result = recv(ConnectSocket, buffer, DEFAULT_BUFLEN, 0);
 
 		if (result > 0) {
 
 			buffer[result] = *"\0";
+
 			std::cout << buffer << std::endl;
 
 		}
